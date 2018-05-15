@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import ActionButton from 'react-native-action-button';
+
+import { changeClothesWeight, startWash, shortcutFinish } from '../../actions/wm_data';
+import { changeMenu } from '../../actions/nav';
+
+import { WASHING_STATE } from '../../config/constant';
+// import RNPopoverMenu from 'react-native-popover-menu';
+// import Icon from 'react-native-vector-icons'
 // import {
 //   Menu,
 //   MenuOptions,
@@ -16,23 +25,54 @@ class EventBox extends Component {
 
   }
 
-  render() {  
+  handleClothesWeightChange = (weight) => {
+    this.props.dispatch(changeClothesWeight(this.props.wmData.clothesWeight + weight));
+  }
+
+  handleStartWash = () => {
+    console.log('start wash!');
+    const { dispatch, program } = this.props;
+    // check able to start
+
+    // change menu
+    dispatch(changeMenu(WASHING_STATE.WASHING));
+
+    // change 
+    dispatch(startWash(program.data));
+    
+  }
+
+  handleFinishWash = () => {
+    console.log('finishing wash!');
+    const { dispatch } = this.props;
+ 
+    // call to event action
+    dispatch(shortcutFinish());
+  }
+ 
+  render() {     
     return (    
-      <View style={{position: 'absolute'}}>
-        {/* <Text>Hello world!</Text>  
-        <Menu>
-          <MenuTrigger text='Select action' />
-          <MenuOptions>
-            <MenuOption onSelect={() => alert(`Save`)} text='Save' />
-            <MenuOption onSelect={() => alert(`Delete`)} >
-              <Text style={{color: 'red'}}>Delete</Text>
-            </MenuOption>
-            <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
-          </MenuOptions>
-        </Menu> */}
-      </View>
+      <ActionButton buttonColor="rgba(231,76,60,1)">
+        <ActionButton.Item buttonColor='#9b59b6' title="Add clothes +2kg" onPress={() => this.handleClothesWeightChange(2) }>
+          <Text>AC</Text>      
+        </ActionButton.Item>       
+        <ActionButton.Item buttonColor='#3498db' title="Remove clothes -2kg" onPress={() => this.handleClothesWeightChange(-2) }>
+          <Text>RC</Text>      
+        </ActionButton.Item>
+        <ActionButton.Item buttonColor='#1abc9c' title="Start washing" onPress={() => this.handleStartWash()}>
+          <Text>ST</Text>      
+        </ActionButton.Item>
+        <ActionButton.Item buttonColor='#1abc9c' title="Finish washing (Timer to 5 sec)" onPress={() => this.handleFinishWash()}>
+          <Text>FN</Text>      
+        </ActionButton.Item>
+      </ActionButton>
     )
   }
 }
 
-export default EventBox;
+const mapStateToProps = (state) => {
+  const { wmData, program } = state;
+  return { wmData, program };
+}
+
+export default connect(mapStateToProps)(EventBox);

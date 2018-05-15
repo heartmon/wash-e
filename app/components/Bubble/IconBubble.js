@@ -23,7 +23,7 @@ switch (position) {
     top = -180;
   break;
   case 'center':
-    top = 0;
+    top = 20;
   break;
   case 'bottom':
     top = 180;

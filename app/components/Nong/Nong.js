@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
+import { connect } from 'react-redux';
+
 import styles from './styles';
 
-import { NONG_EMOTION } from '../../config/constant';
+import { changeStepFromStartToWash } from '../../actions/wm_data';
+import { NONG_EMOTION, WASHING_STATE } from '../../config/constant';
 
 const nongIcons = {};
 nongIcons[NONG_EMOTION.GREETING] = require('./images/greet.gif');
@@ -33,17 +36,57 @@ nongIcons[NONG_EMOTION.TOO_FULL] = require('./images/toomuch.png');
 nongIcons[NONG_EMOTION.WAVE] = require('./images/wave.gif');
 
 class Nong extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      current: ''
+    };
+  }
+
   render() {
-    const { style, children } = this.props;
+    let nongCurrentEmotion = NONG_EMOTION.GREETING;
+
+    const { style, wmData, dispatch } = this.props;
+    const { step } = wmData;
+
+    if (step === WASHING_STATE.START_WASHING) {
+      nongCurrentEmotion = NONG_EMOTION.START;
+      
+      // wait for animation to finish and then update step
+      setTimeout(() => {
+        dispatch(changeStepFromStartToWash());
+      }, 3500)
+    } else if (step === WASHING_STATE.WASHING) {
+      nongCurrentEmotion = NONG_EMOTION.START;
+    } else {
+      // hungry
+      const { clothesWeight, maxWeight } = wmData;
+      if (clothesWeight > 0) {
+        if (clothesWeight < maxWeight / 2) {
+          nongCurrentEmotion = NONG_EMOTION.HUNGRY;
+        } else if (clothesWeight >= maxWeight - 2 && clothesWeight <= maxWeight + 1) {
+          nongCurrentEmotion = NONG_EMOTION.FULL;
+        } else if (clothesWeight > maxWeight) {
+          nongCurrentEmotion = NONG_EMOTION.TOO_FULL; 
+        } else {
+          nongCurrentEmotion = NONG_EMOTION.HUNGRY;
+        }
+      }
+    }
+ 
     return (
       <View style={style}>
          <Image
           style={styles.nong}
           resizeMode="contain"
-          source={nongIcons[NONG_EMOTION.BATH]} />
+          source={nongIcons[nongCurrentEmotion]} />
       </View>
     )
   }
 }
 
-export default Nong;
+const mapStateToProps = ({wmData}) => {
+  return { wmData };
+}
+
+export default connect(mapStateToProps)(Nong);

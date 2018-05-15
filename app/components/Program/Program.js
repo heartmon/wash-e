@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import styles from './styles';
 
+import CustomProgram from './CustomProgram';
+import WashingProgram from './WashingProgram';
 import ProgramItem from './ProgramItem';
 
 import { adjustProgram } from '../../actions/program';
@@ -35,11 +37,28 @@ class Program extends Component {
   }
 
   render() {
-    const { data } = this.props.program;
-    if (!this.isShowProgram() || !data) {
+    const { data, custom } = this.props.program;
+    const { step } = this.props;
+    if (!this.isShowProgram() || !data || step === 'START_WASHING') {
       return <View /> 
     }  
     else {
+      let programScreen;
+      if (step === 'WASHING') { 
+        programScreen = <WashingProgram />;
+      } else if (custom) {
+        programScreen = <CustomProgram />;
+      } else {
+        programScreen = (
+          <View style={styles.content}>
+            <ProgramItem text="Temperature" icon="temperature" value={data.temperature} />
+            <ProgramItem text="Spin Speed" icon="rpm" value={data.spin_speed} />
+            <ProgramItem onPress={() => this.handleCheckboxPress('pre_wash')} text="Pre-wash" icon="pre_wash" checkbox={true} selected={data.pre_wash}  />
+            <ProgramItem onPress={() => this.handleCheckboxPress('heavy_stain')} text="Heavy Stain" icon="heavy_stain" checkbox={true} selected={data.heavy_stain}  />
+            <ProgramItem onPress={() => this.handleCheckboxPress('rapid')} text="Rapid" icon="rapid" selected={true} checkbox={true} selected={data.rapid}  />
+          </View>
+        )
+      }
       return (
         <View style={styles.container}>
           <TouchableOpacity onPress={() => this.handlePress()} style={styles.handle}>
@@ -49,19 +68,14 @@ class Program extends Component {
           (<View>
               <View style={styles.header}>
               <Text style={styles.title}>{data.title}</Text>
-              <View style={styles.subtitleWrapper}>
-                <Image style={styles.subtitleIcon} />
+              <View style={{flexDirection: 'row'}}>
+                <Image source={require('./images/icon_time.png')} style={styles.subtitleIcon} />
                 <Text style={styles.subtitle}>00:48:00</Text>
               </View>
-            </View> 
-            <View style={styles.content}>
-              <ProgramItem text="Temperature" icon="temperature" value={data.temperature} />
-              <ProgramItem text="Spin Speed" icon="rpm" value={data.spin_speed} />
-              {/* <Switch value={data.pre_wash} onValueChange={() => this.handleCheckboxPress('pre_wash')} /> */}
-              <ProgramItem onPress={() => this.handleCheckboxPress('pre_wash')} text="Pre-wash" icon="pre_wash" checkbox={true} selected={data.pre_wash}  />
-              <ProgramItem onPress={() => this.handleCheckboxPress('heavy_stain')} text="Heavy Stain" icon="heavy_stain" checkbox={true} selected={data.heavy_stain}  />
-              <ProgramItem onPress={() => this.handleCheckboxPress('rapid')} text="Rapid" icon="rapid" selected={true} checkbox={true} selected={data.rapid}  />
-            </View>
+            </View>  
+            { 
+              programScreen
+            }
           </View>
           )}
         </View>
@@ -70,10 +84,12 @@ class Program extends Component {
   } 
 }
 
-const mapStateToProps = ({program, menu}) => {
+const mapStateToProps = ({program, menu, wmData}) => {
   return {
-    program,
-    // menu
+    program, 
+    step: wmData.step,
+    // washState: wmData.washInfo.washState,
+    // menu  
   }
 };
 

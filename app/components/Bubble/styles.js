@@ -8,7 +8,7 @@ export default EStyleSheet.create({
     paddingTop: 16,
   },
   clothesBubble: {
-    width: 227,
+    width: 240,
     height: 146,
     paddingHorizontal: 16, 
     paddingTop: 8,

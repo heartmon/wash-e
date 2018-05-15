@@ -12,6 +12,16 @@ const reducer = (state = initialState, action) => {
             ...state,
             menu: 'PRE_DEFINED'
           }
+        case 'CUSTOM':
+          return {
+            ...state,
+            menu: 'CUSTOM',
+          }
+        case 'WASHING':
+          return {
+            ...state,
+            menu: 'WASHING',
+          }
         default: 
           return { 
             ...state,

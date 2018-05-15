@@ -10,6 +10,9 @@ import store from './config/store';
 EStyleSheet.build({
   $primary: "#041E50",
   $primaryNonSelect: "#6480B8",
+  $blueGray: '#B9C5DE',
+  $yellow: '#FBC400',
+  $orange: '#FF8023',
   $primaryBlue: "#4F6D7A",
   $primaryOrange: "#D57A66",
   $primaryGreen: "#00BD9D",

@@ -61,4 +61,8 @@ export default EStyleSheet.create({
     width: 35,
     height: 35,
   },
+  subtitleIcon: {
+    alignSelf: 'center',
+    marginRight: 12
+  },
 });

@@ -23,7 +23,7 @@ const EnergyBubble = ({
 
   switch (position) {
     case 'top':
-      top = -180;
+      top = -150;
     break;
     case 'center':
       top = 0;

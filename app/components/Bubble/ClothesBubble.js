@@ -6,6 +6,7 @@ import styles from './styles';
 
 const ClothesBubble = ({
   weight, 
+  maxWeight,
   style, 
   position,
   side,
@@ -22,7 +23,7 @@ let distance = styles._clothesBubble.width + offset;
 
 switch (position) {
   case 'top':
-    top = -180;
+    top = -150;
   break;
   case 'center':
     top = 0;
@@ -55,9 +56,23 @@ const clothesColor = {
   green: '#27AE60',
   yellow: '#F2C94C',
   red: '#EB5757',
+  tooMuch: '#EB5757',
 }
 
-const level = 'red';
+const clothesText = {
+  green: '#27AE60',
+  yellow: '#F2C94C',
+  red: 'More clothes please!',
+}
+
+let level = 'red';
+if(weight < maxWeight / 2 || weight > maxWeight) {
+  level = 'red';
+} else if (weight >= maxWeight - 1 && weight <= maxWeight + 1) {
+  level = 'green';
+} else if (weight > maxWeight / 2) {
+  level = 'yellow';
+}
 
   return (
     <View style={[posStyle, style]}>
@@ -70,14 +85,16 @@ const level = 'red';
           <View style={{width: 54, marginRight: 16}}>
             <Image source={clothesIcon[level]}/>
           </View> 
-          <Text style={[{fontWeight: 'bold', fontSize: 48, flex: 1, textAlign: 'center'}, {color: clothesColor[level]}]}>0</Text>
+          <Text style={[{fontWeight: 'bold', fontSize: 48, flex: 1, textAlign: 'center'}, {color: clothesColor[level]}]}>
+            {weight}
+          </Text>
           <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
             <Text style={{fontSize: 24, paddingHorizontal: 4, color: '#575757'}}>/</Text>
-            <Text style={{fontSize: 36, paddingHorizontal: 4, color: '#575757'}}>8</Text>
+            <Text style={{fontSize: 36, paddingHorizontal: 4, color: '#575757'}}>{maxWeight}</Text>
             <Text style={{fontSize: 24, paddingHorizontal: 4, color: '#575757'}}>kg</Text>
           </View>
         </View>
-        <Text style={{marginTop: 4, fontSize: 16, color: '#575757', alignSelf: 'center'}}>More clothes please!</Text>
+        <Text style={{marginTop: 4, fontSize: 16, color: '#575757', alignSelf: 'center'}}>{clothesText[level]}</Text>
       </ImageBackground>
     </View>
   );

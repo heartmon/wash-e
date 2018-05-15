@@ -10,10 +10,11 @@ import { MenuButton } from '../Button';
 
 import { connect } from 'react-redux';
 import { changeMenu } from '../../actions/nav';
-import { changeProgram, unselectedProgram } from '../../actions/program';
+import { customProgram, changeProgram, unselectedProgram } from '../../actions/program';
 
 import { PROGRAM_TYPE, MENU_LEVEL } from '../../config/constant';
 import programData from '../../data/program';
+import { custom } from '../../data/default';
 
 const menuIcon = {};
 menuIcon[PROGRAM_TYPE.NORMAL_30] = require('./images/icon_normal30.png');
@@ -79,6 +80,15 @@ class Menu extends Component {
           dispatch(changeMenu(menuItem.to));
         break;
 
+        case 'CUSTOM':
+          // change menu
+          dispatch(changeMenu(menuItem.to));
+
+          // set custom to true
+          dispatch(customProgram(custom));
+
+        break;
+
         default:
       }
     } else {
@@ -118,10 +128,11 @@ class Menu extends Component {
 }
 
 const mapStateToProps = (state) => { 
-  const { nav, program } = state;
+  const { nav, program, wmData } = state;
   return {
     nav,
     program,
+    step: wmData.step,
   }; 
 };
 

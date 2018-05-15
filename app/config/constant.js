@@ -48,6 +48,8 @@ export const MENU_LEVEL = {
 
 export const WASHING_STATE = {
   CONFIG: 'CONFIG',
+  START_WASHING: 'START_WASHING',
+  WASHING: 'WASHING',
 }
 
 export const PROGRAM_TYPE = {
