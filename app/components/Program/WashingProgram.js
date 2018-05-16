@@ -12,7 +12,7 @@ import ProgramItem from './ProgramItem';
 import CustomProgramItem from './CustomProgramItem';
 
 import { adjustProgram } from '../../actions/program';
-import { timerCountdown } from '../../actions/wm_data';
+import { timerCountdown, changeStepFromWashToFinish } from '../../actions/wm_data';
 import { MENU_LEVEL, WASHING_STATE } from '../../config/constant';
 
 const compStyle = EStyleSheet.create({
@@ -57,19 +57,30 @@ class WashingProgram extends Component {
 
   }
 
+  componentWillMount() {
+
+  }
+
   render() {
     const { data } = this.props.program;
     const { washInfo, step, dispatch } = this.props;
     
-    console.log(washInfo);
-    if (!this.interval && step === WASHING_STATE.WASHING) {
+    if (step === WASHING_STATE.WASHING && washInfo.currentTime === 0) {
+      console.log('test');
+      clearInterval(this.interval);
+      this.interval = null;
+
+      // send update step
+      dispatch(changeStepFromWashToFinish());
+    }
+    else if (!this.interval && step === WASHING_STATE.WASHING) {
       this.interval = setInterval(() => {
         dispatch(timerCountdown());
       }, 1000) 
     } else if(this.interval && step !== WASHING_STATE.WASHING ) {
       clearInterval(this.interval);
       this.interval = null;
-    } 
+    }
 
     return (
       <View style={[styles.content, {alignItems: 'center', paddingTop: 40, paddingBottom: 40,}]}>

@@ -49,16 +49,21 @@ class Nong extends Component {
     const { style, wmData, dispatch } = this.props;
     const { step } = wmData;
 
-    if (step === WASHING_STATE.START_WASHING) {
+    if (step === WASHING_STATE.FINISH_WASHING) {
+      nongCurrentEmotion = NONG_EMOTION.FINISH;
+    }
+    else if (step === WASHING_STATE.START_WASHING) {
       nongCurrentEmotion = NONG_EMOTION.START;
       
       // wait for animation to finish and then update step
       setTimeout(() => {
         dispatch(changeStepFromStartToWash());
-      }, 3500)
-    } else if (step === WASHING_STATE.WASHING) {
+      }, 3000)
+    } 
+    else if (step === WASHING_STATE.WASHING) {
       nongCurrentEmotion = NONG_EMOTION.START;
-    } else {
+    } 
+    else {
       // hungry
       const { clothesWeight, maxWeight } = wmData;
       if (clothesWeight > 0) {

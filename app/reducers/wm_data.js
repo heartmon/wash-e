@@ -1,6 +1,13 @@
 import moment from 'moment';
 
-import { CHANGE_CLOTHES_WEIGHT, START_WASH, CHANGE_STEP_FROM_START_TO_WASH, TIMER_COUNTDOWN, SHORTCUT_FINISH } from '../actions/wm_data';
+import { 
+  CHANGE_CLOTHES_WEIGHT, 
+  START_WASH, 
+  CHANGE_STEP_FROM_START_TO_WASH, 
+  TIMER_COUNTDOWN, 
+  CHANGE_STEP_FROM_WASH_TO_FINISH,
+  SHORTCUT_FINISH 
+} from '../actions/wm_data';
 import { WASHING_STATE } from '../config/constant';
 
 const initialState = {
@@ -31,6 +38,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, washInfo: { ...state.washInfo, currentTime: state.washInfo.currentTime + action.step }};
     case SHORTCUT_FINISH:
       return { ...state, washInfo: { ...state.washInfo, currentTime: 5}};
+    case CHANGE_STEP_FROM_WASH_TO_FINISH:
+      return { ...state, step: action.step }; 
     default:
       return { ...state }; 
   }

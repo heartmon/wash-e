@@ -10,7 +10,7 @@ import WashingProgram from './WashingProgram';
 import ProgramItem from './ProgramItem';
 
 import { adjustProgram } from '../../actions/program';
-import { MENU_LEVEL } from '../../config/constant';
+import { MENU_LEVEL, WASHING_STATE } from '../../config/constant';
 
 class Program extends Component {
   constructor(props) {
@@ -46,6 +46,10 @@ class Program extends Component {
       let programScreen;
       if (step === 'WASHING') { 
         programScreen = <WashingProgram />;
+      } else if (step === WASHING_STATE.FINISH_WASHING) {
+        programScreen = <CustomProgram />;
+      } else if (step === WASHING_STATE.SUMMARY) {
+        programScreen = <CustomProgram />;
       } else if (custom) {
         programScreen = <CustomProgram />;
       } else {
