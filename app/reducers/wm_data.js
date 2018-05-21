@@ -6,7 +6,9 @@ import {
   CHANGE_STEP_FROM_START_TO_WASH, 
   TIMER_COUNTDOWN, 
   CHANGE_STEP_FROM_WASH_TO_FINISH,
-  SHORTCUT_FINISH 
+  CHANGE_STEP_FROM_FINISH_TO_SUMMARY,
+  SHORTCUT_FINISH ,
+  RESET_STEP
 } from '../actions/wm_data';
 import { WASHING_STATE } from '../config/constant';
 
@@ -37,9 +39,13 @@ const reducer = (state = initialState, action) => {
     case TIMER_COUNTDOWN:
       return { ...state, washInfo: { ...state.washInfo, currentTime: state.washInfo.currentTime + action.step }};
     case SHORTCUT_FINISH:
-      return { ...state, washInfo: { ...state.washInfo, currentTime: 5}};
+      return { ...state, washInfo: { ...state.washInfo, currentTime: 3}};
     case CHANGE_STEP_FROM_WASH_TO_FINISH:
       return { ...state, step: action.step }; 
+    case CHANGE_STEP_FROM_FINISH_TO_SUMMARY:
+      return { ...state, step: action.step };
+    case RESET_STEP: 
+      return { ...state, step: WASHING_STATE.CONFIG };
     default:
       return { ...state }; 
   }

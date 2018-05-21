@@ -11,6 +11,7 @@ import { MenuButton } from '../Button';
 import { connect } from 'react-redux';
 import { changeMenu } from '../../actions/nav';
 import { customProgram, changeProgram, unselectedProgram } from '../../actions/program';
+import { resetStep } from '../../actions/wm_data'; 
 
 import { PROGRAM_TYPE, MENU_LEVEL } from '../../config/constant';
 import programData from '../../data/program';
@@ -46,6 +47,14 @@ menuList[MENU_LEVEL.PRE_DEFINED] = programData.map((program) => {
     program: program,
   }
 });
+
+menuList[MENU_LEVEL.SUMMARY] = [
+  {
+    title: "Start new washing",
+    to: MENU_LEVEL.SUMMARY,
+    icon: require('./images/icon_predefined.png'),
+  }
+]
 
 class Menu extends Component {
   constructor(props) {
@@ -89,6 +98,15 @@ class Menu extends Component {
 
         break;
 
+        case 'SUMMARY':
+          // reset everything
+          dispatch(changeMenu(MENU_LEVEL.HOME));
+          dispatch(unselectedProgram());
+          dispatch(resetStep());
+          // reset clothes weight
+
+        break;
+
         default:
       }
     } else {
@@ -98,6 +116,24 @@ class Menu extends Component {
 
   render() {
     const { menu } = this.props.nav;
+
+    let menuContent = menuList[menu] && menuList[menu].map(
+      (m, index) => (
+        <MenuButton 
+          onPress={() => this.handlePress(m)} 
+          style={{marginHorizontal: 20}} 
+          text={m.title} 
+          key={index} 
+          icon={m.icon}
+          selected={m.key && m.key === this.props.program.selected}
+        />
+      ));
+    
+    if (menu === MENU_LEVEL.CUSTOM) {
+      menuContent = (<View>
+        <Text>Custom Menu</Text>
+      </View>)
+    }
 
     return (
       <View onStartShouldSetResponder={() => true}
@@ -109,18 +145,8 @@ class Menu extends Component {
           contentContainerStyle={{alignItems: 'center', justifyContent: 'center',}}
         >
           { 
-            menuList[menu] && 
-            menuList[menu].map(
-              (m, index) => (
-                <MenuButton 
-                  onPress={() => this.handlePress(m)} 
-                  style={{marginHorizontal: 20}} 
-                  text={m.title} 
-                  key={index} 
-                  icon={m.icon}
-                  selected={m.key && m.key === this.props.program.selected}
-                />
-              )) }
+            menuList[menu] && menuContent
+          }
         </ScrollView>
       </View>
     );

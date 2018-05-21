@@ -7,6 +7,7 @@ const IconBubble = ({
   style, 
   position,
   side,
+  onPress,
 }) => {
 
 const posStyle = {
@@ -44,7 +45,7 @@ switch (side) {
 }
 
   return ( 
-    <TouchableOpacity style={[posStyle, style]}>
+    <TouchableOpacity onPress={onPress} style={[posStyle, style]}>
       <ImageBackground 
         resizeMode="contain" 
         style={[styles.iconBubble]} 

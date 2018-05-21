@@ -44,6 +44,7 @@ export const MENU_LEVEL = {
   PRE_DEFINED: 'PRE_DEFINED',
   CUSTOM: 'CUSTOM',
   WASHING: 'WASHING',
+  SUMMARY: 'SUMMARY',
 };
 
 export const WASHING_STATE = {

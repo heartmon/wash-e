@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, Text, Image } from 'react-native';
+import { View, ImageBackground, Text, Image, TouchableOpacity } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
 
 import styles from './styles';
@@ -10,6 +10,7 @@ const ClothesBubble = ({
   style, 
   position,
   side,
+  onPress,
 }) => {
 
 const posStyle = {
@@ -75,7 +76,7 @@ if(weight < maxWeight / 2 || weight > maxWeight) {
 }
 
   return (
-    <View style={[posStyle, style]}>
+    <TouchableOpacity style={[posStyle, style]} onPress={onPress}>
       <ImageBackground 
         resizeMode="contain"
         style={[styles.clothesBubble]}
@@ -96,7 +97,7 @@ if(weight < maxWeight / 2 || weight > maxWeight) {
         </View>
         <Text style={{marginTop: 4, fontSize: 16, color: '#575757', alignSelf: 'center'}}>{clothesText[level]}</Text>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -71,7 +71,10 @@ class WashingProgram extends Component {
       this.interval = null;
 
       // send update step
-      dispatch(changeStepFromWashToFinish());
+      setTimeout(() => {
+        dispatch(changeStepFromWashToFinish());
+      }, 10);
+
     }
     else if (!this.interval && step === WASHING_STATE.WASHING) {
       this.interval = setInterval(() => {
@@ -83,31 +86,40 @@ class WashingProgram extends Component {
     }
 
     return (
-      <View style={[styles.content, {alignItems: 'center', paddingTop: 40, paddingBottom: 40,}]}>
-        <AnimatedCircularProgress
-          size={280}
-          width={18}
-          fill={20}
-          rotation={0}
-          tintColor="#01B1CB"
-          onAnimationComplete={() => console.log('onAnimationComplete')}
-          backgroundColor="#E0E0E0">
-          {
-            (fill) => (
-              <View style={{alignItems: 'center'}}> 
-                <Text style={compStyle.washingStateText}>
-                  Washing 
-                </Text>
-                <Text style={compStyle.timeText}>
-                  {this.getTimeText(washInfo.currentTime)}
-                </Text>
-                <Text style={compStyle.remainingText}>
-                  Remaining
-                </Text>
-              </View>
-            )
-          }
-        </AnimatedCircularProgress>
+      <View>
+        <View style={styles.header}>
+          <Text style={styles.title}>{data.title}</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Image source={require('./images/icon_time.png')} style={styles.subtitleIcon} />
+            <Text style={styles.subtitle}>00:48:00</Text>
+          </View>
+        </View>  
+        <View style={[styles.content, {alignItems: 'center', paddingTop: 40, paddingBottom: 40,}]}>
+          <AnimatedCircularProgress
+            size={280}
+            width={18}
+            fill={20}
+            rotation={0}
+            tintColor="#01B1CB"
+            onAnimationComplete={() => console.log('onAnimationComplete')}
+            backgroundColor="#E0E0E0">
+            {
+              (fill) => (
+                <View style={{alignItems: 'center'}}> 
+                  <Text style={compStyle.washingStateText}>
+                    Washing 
+                  </Text>
+                  <Text style={compStyle.timeText}>
+                    {this.getTimeText(washInfo.currentTime)}
+                  </Text>
+                  <Text style={compStyle.remainingText}>
+                    Remaining
+                  </Text>
+                </View>
+              )
+            }
+          </AnimatedCircularProgress>
+        </View>
       </View>
     );
   } 

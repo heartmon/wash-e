@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
+import lodash from 'lodash';
 
 import styles from './styles';
 
-import { changeStepFromStartToWash } from '../../actions/wm_data';
-import { NONG_EMOTION, WASHING_STATE } from '../../config/constant';
+import { changeMenu } from '../../actions/nav';
+import { changeStepFromStartToWash, changeStepFromFinishToSummary } from '../../actions/wm_data';
+import { updateScore } from '../../actions/program';
+import { NONG_EMOTION, WASHING_STATE, MENU_LEVEL } from '../../config/constant';
 
 const nongIcons = {};
 nongIcons[NONG_EMOTION.GREETING] = require('./images/greet.gif');
@@ -36,21 +39,71 @@ nongIcons[NONG_EMOTION.TOO_FULL] = require('./images/toomuch.png');
 nongIcons[NONG_EMOTION.WAVE] = require('./images/wave.gif');
 
 class Nong extends Component {
+  hungry = false;
+  clothesWeight = 0;
+  persistEmotion;
+  programData = {};
+  nextEmotion;
+
   constructor(props) {
     super(props);
     this.state = {
-      current: ''
+      current: '',
+      hungry: false,
     };
+  }
+  
+  getNongLevel = () => {
+    const { scoreChange, currentScore } = this.props;
+    const predictScore = scoreChange + currentScore;
+
+    // let level = NONG_EMOTION.
+
+    if (predictScore >= 91) {
+      level = NONG_EMOTION.JUMP;
+    } else if (predictScore >= 81 && predictScore <= 90) {
+      level = NONG_EMOTION.PLANT;
+    } else if (predictScore >= 61 && predictScore <= 80) {
+      level = NONG_EMOTION.WAVE;
+    } else if (predictScore >= 41 && predictScore <= 60) {
+      level = NONG_EMOTION.TALK_TO_THE_HAND;
+    } else if (predictScore >= 31 && predictScore <= 40) {
+      level = NONG_EMOTION.STOP;
+    } else if (predictScore >= 11 && predictScore <= 30) {
+      level = NONG_EMOTION.MUTATE;
+    } else if (predictScore <= 10) {
+      level = NONG_EMOTION.MUTATE_POOR;
+    }
+ 
+    return level;
   }
 
   render() {
     let nongCurrentEmotion = NONG_EMOTION.GREETING;
 
-    const { style, wmData, dispatch } = this.props;
-    const { step } = wmData;
+    const { style, wmData, dispatch, nav, programSelected, 
+      programData,
+      currentScore,
+      scoreChange,
+      customScore,
+    } = this.props;
+    const { step, clothesWeight, maxWeight } = wmData;
 
-    if (step === WASHING_STATE.FINISH_WASHING) {
+    if (step === WASHING_STATE.SUMMARY) {
+      // on calculation
+      nongCurrentEmotion = NONG_EMOTION.THINKING;
+    }
+    else if (step === WASHING_STATE.FINISH_WASHING) {
       nongCurrentEmotion = NONG_EMOTION.FINISH;
+      setTimeout(() => {
+        dispatch(changeStepFromFinishToSummary());
+        dispatch(changeMenu(MENU_LEVEL.SUMMARY));
+
+        // save current score
+        // call dispatch action
+        dispatch(updateScore(currentScore + scoreChange));
+
+      }, 1500);
     }
     else if (step === WASHING_STATE.START_WASHING) {
       nongCurrentEmotion = NONG_EMOTION.START;
@@ -58,15 +111,27 @@ class Nong extends Component {
       // wait for animation to finish and then update step
       setTimeout(() => {
         dispatch(changeStepFromStartToWash());
-      }, 3000)
+      }, 3000);
     } 
     else if (step === WASHING_STATE.WASHING) {
       nongCurrentEmotion = NONG_EMOTION.START;
     } 
+    // CONFIG
     else {
-      // hungry
-      const { clothesWeight, maxWeight } = wmData;
-      if (clothesWeight > 0) {
+      // greeting at the menu
+      if (nav.menu == MENU_LEVEL.HOME) {
+        nongCurrentEmotion = NONG_EMOTION.GREETING;
+      } 
+
+      // program or hungry??
+
+
+      // when choose a new program
+      else if (programSelected && !lodash.isEqual(programData, this.programData)) {
+        nongCurrentEmotion = this.getNongLevel();
+        this.programData = programData; 
+      }
+      else if (clothesWeight > 0 && !this.hungry && this.clothesWeight !== clothesWeight) {
         if (clothesWeight < maxWeight / 2) {
           nongCurrentEmotion = NONG_EMOTION.HUNGRY;
         } else if (clothesWeight >= maxWeight - 2 && clothesWeight <= maxWeight + 1) {
@@ -76,6 +141,23 @@ class Nong extends Component {
         } else {
           nongCurrentEmotion = NONG_EMOTION.HUNGRY;
         }
+
+        // hungry time set
+        this.hungry = true;
+        setTimeout(() => {
+          this.hungry = false;
+        }, 3000)
+
+        this.clothesWeight = clothesWeight;
+      } else {
+        // others
+        if (!this.persistEmotion) {
+          Math.random();
+          this.persistEmotion = NONG_EMOTION.SOMETHING;
+          this.persistEmotion = NONG_EMOTION.POINT;
+        }
+
+
       }
     }
  
@@ -90,8 +172,16 @@ class Nong extends Component {
   }
 }
 
-const mapStateToProps = ({wmData}) => {
-  return { wmData };
+const mapStateToProps = ({wmData, program, nav}) => {
+  const { scoreChange, currentScore, selected, data } = program;
+  return { 
+    wmData,
+    scoreChange,
+    currentScore,
+    programSelected: selected,
+    programData: data,
+    nav,
+  };
 }
 
 export default connect(mapStateToProps)(Nong);
