@@ -13,7 +13,7 @@ import { changeMenu } from '../../actions/nav';
 import { customProgram, changeProgram, unselectedProgram } from '../../actions/program';
 import { resetStep } from '../../actions/wm_data'; 
 
-import { PROGRAM_TYPE, MENU_LEVEL } from '../../config/constant';
+import { PROGRAM_TYPE, MENU_LEVEL, WASHING_STATE } from '../../config/constant';
 import programData from '../../data/program';
 import { custom } from '../../data/default';
 
@@ -47,6 +47,14 @@ menuList[MENU_LEVEL.PRE_DEFINED] = programData.map((program) => {
     program: program,
   }
 });
+ 
+menuList[MENU_LEVEL.WASHING] = [
+  {
+    title: "Cancel Wash",
+    to: MENU_LEVEL.HOME,
+    icon: require('./images/icon_cancel.png')
+  }
+]
 
 menuList[MENU_LEVEL.SUMMARY] = [
   {
@@ -117,7 +125,7 @@ class Menu extends Component {
   render() {
     const { menu } = this.props.nav;
 
-    let menuContent = menuList[menu] && menuList[menu].map(
+    let menuContent = menuList[menu] && this.props.step !== WASHING_STATE.START_WASHING &&  menuList[menu].map(
       (m, index) => (
         <MenuButton 
           onPress={() => this.handlePress(m)} 

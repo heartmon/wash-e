@@ -58,6 +58,8 @@ class Nong extends Component {
     const predictScore = scoreChange + currentScore;
 
     // let level = NONG_EMOTION.
+    
+    // also add the dependent on direction (INC or DEC)
 
     if (predictScore >= 91) {
       level = NONG_EMOTION.JUMP;
@@ -71,8 +73,10 @@ class Nong extends Component {
       level = NONG_EMOTION.STOP;
     } else if (predictScore >= 11 && predictScore <= 30) {
       level = NONG_EMOTION.MUTATE;
-    } else if (predictScore <= 10) {
+    } else if (predictScore <= 10 && predictScore >= 0) {
       level = NONG_EMOTION.MUTATE_POOR;
+    } else if (predictScore < 0) {
+      level = NONG_EMOTION.DIE;
     }
  
     return level;

@@ -38,6 +38,10 @@ class Home extends Component {
       this[name].dismiss();
     }
   }
+
+  handleHeartClick = () => {
+    this.sickDialog.show();
+  }
  
   render() {
     const { program, wmData } = this.props;
@@ -53,6 +57,7 @@ class Home extends Component {
                 onTipClick={this.handleTipClick}
                 onClothesClick={this.handleClothesClick}
                 onChemicalClick={this.handleChemicalClick}
+                onHeartClick={this.handleHeartClick}
               /> 
             </View>
           </View> 
@@ -62,6 +67,7 @@ class Home extends Component {
         <TipDialog setRef={(ref) => this.tipDialog = ref} onDismiss={this.handleDialogDismiss} />
         <ClothesDialog setRef={(ref) => this.clothesDialog = ref} onDismiss={this.handleDialogDismiss} />
         <ChemicalDialog setRef={(ref) => this.chemicalDialog = ref} onDismiss={this.handleDialogDismiss} />
+        <SickDialog text="Machine drum is broken" setRef={(ref) => this.sickDialog = ref} onDismiss={this.handleDialogDismiss} />
       </Container>  
     );  
   }
@@ -154,6 +160,26 @@ const ChemicalDialog = ({setRef, onDismiss}) => (
       </View>
       <View style={dialogStyles.content}>
         {/* <Image source={require('../components/Dialog/images/tip_content.png')} />  */}
+      </View>
+    </View>
+  </PopupDialog>
+)
+
+const SickDialog = ({setRef, text, onDismiss}) => (
+  <PopupDialog
+    width={0.6}
+    height={400}
+    ref={setRef}
+    dialogAnimation={scaleAnimation}
+    dialogStyle={{ borderRadius: 20 }} 
+  >
+    <View style={{borderColor: '#BDBDBD', borderStyle: 'solid', borderRadius: 20, borderWidth: 10, flex: 1, height: '100%'}}>
+      <TouchableOpacity style={dialogStyles.close} onPress={() => onDismiss('tipDialog')}>
+        <Image source={require('../components/Dialog/images/icon_close.png')} />
+      </TouchableOpacity>
+      <View style={dialogStyles.content}>
+        <Image />
+        <Text>{text}</Text>
       </View>
     </View>
   </PopupDialog>

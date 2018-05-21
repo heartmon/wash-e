@@ -3,7 +3,11 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 
-import { changeClothesWeight, startWash, shortcutFinish } from '../../actions/wm_data';
+import { changeClothesWeight, startWash, 
+  shortcutFinish, 
+  machineGetSick,
+  machineBackToNormal
+} from '../../actions/wm_data';
 import { changeMenu } from '../../actions/nav';
 
 import { WASHING_STATE } from '../../config/constant';
@@ -49,8 +53,19 @@ class EventBox extends Component {
     // call to event action
     dispatch(shortcutFinish());
   }
+
+  handleToggleSick = () => {
+    const { sick } = this.props.wmData;
+    if (sick) {
+      dispatch(machineBackToNormal());
+    } else {
+      dispatch(machineGetSick());
+    }
+  }
+
  
   render() {     
+    const { currentScore } = this.props.program;
     return (    
       <ActionButton buttonColor="rgba(231,76,60,1)">
         <ActionButton.Item buttonColor='#9b59b6' title="Add clothes +2kg" onPress={() => this.handleClothesWeightChange(2) }>
@@ -64,6 +79,12 @@ class EventBox extends Component {
         </ActionButton.Item>
         <ActionButton.Item buttonColor='#1abc9c' title="Finish washing (Timer to 5 sec)" onPress={() => this.handleFinishWash()}>
           <Text>FN</Text>      
+        </ActionButton.Item>
+        <ActionButton.Item buttonColor='#900022' title="Toggle Sick" onPress={() => this.handleToggleSick()}>
+          <Text>TS</Text>
+        </ActionButton.Item>
+        <ActionButton.Item title="Score">
+          <Text>{currentScore}</Text>
         </ActionButton.Item>
       </ActionButton>
     )

@@ -13,6 +13,8 @@ export const PAUSE_WASH = 'PAUSE_WASH';
 export const CANCEL_WASH = 'CANCEL_WASH';
 export const FINISH_WASH = 'FINISH_WASH';
 export const RESET_STEP = 'RESET_STEP';
+export const MACHINE_GET_SICK = 'MACHINE_SICK';
+export const MACHINE_BACK_TO_NORMAL = 'MACHINE_BACK_TO_NORMAL';
 
 export const changeClothesWeight = weight => ({
     type: CHANGE_CLOTHES_WEIGHT,
@@ -50,4 +52,12 @@ export const shortcutFinish = () => ({
 
 export const resetStep = () => ({
     type: RESET_STEP,
+});
+
+export const machineGetSick = () => ({
+    type: MACHINE_GET_SICK
+});
+
+export const machineBackToNormal = () => ({
+    type: MACHINE_BACK_TO_NORMAL
 });

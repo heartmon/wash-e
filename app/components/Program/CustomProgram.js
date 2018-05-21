@@ -50,13 +50,15 @@ const CustomChoice = ({icon, selected, title}) => {
 }
 
 const CustomSection = ({title, choices}) => {
-  return (
-    <View>
-      <Text>{title}</Text>
+  return ( 
+    <View style={{padding: 24}}>
+      <Text style={{fontSize: 30, color: '#041E50', borderStyle: 'solid', borderBottomWidth: 1, borderBottomColor: '#6480B8'}}>{title}</Text>
       <View>
-        {/* {choices.map((choice) => <CustomChoice props={...choice} />)} */}
+        {
+          choices.map((choice, index) => (<CustomChoice key={index} title={choice.title}  />))
+        }
       </View>
-    </View>
+    </View> 
   )
 };
 
@@ -105,6 +107,7 @@ class CustomProgram extends Component {
             </View>
           </View>  
           <View style={styles.content}>
+            <CustomSection title="Color" choices={choicesData.color} />
             {/* <CustomProgramItem active={true} />
             <CustomProgramItem active={false} />
             <CustomProgramItem active={false} />

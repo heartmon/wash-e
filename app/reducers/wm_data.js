@@ -8,7 +8,9 @@ import {
   CHANGE_STEP_FROM_WASH_TO_FINISH,
   CHANGE_STEP_FROM_FINISH_TO_SUMMARY,
   SHORTCUT_FINISH ,
-  RESET_STEP
+  RESET_STEP,
+  MACHINE_GET_SICK,
+  MACHINE_BACK_TO_NORMAL
 } from '../actions/wm_data';
 import { WASHING_STATE } from '../config/constant';
 
@@ -20,7 +22,8 @@ const initialState = {
     currentTime: 0,
     finishTime: 0,
     washState: '',
-  }
+  },
+  sick: false,
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -46,6 +49,10 @@ const reducer = (state = initialState, action) => {
       return { ...state, step: action.step };
     case RESET_STEP: 
       return { ...state, step: WASHING_STATE.CONFIG };
+    case MACHINE_GET_SICK:
+      return { ...state, sick: true};
+    case MACHINE_BACK_TO_NORMAL:
+      return { ...state, sick: false};
     default:
       return { ...state }; 
   }

@@ -61,20 +61,13 @@ class BubbleContainer extends Component {
     return {position, side};
   }
 
-  handleBubbleClick = () => {
-
-  }
-  
-  handleTipClick = () => {
-    const { tipDialog } = this.props;
-    if (tipDialog) {
-      tipDialog.show();
-    } 
-    // this.popupDialog.show(); 
-  }
-  
   render() {
-    const { program, wmData, onTipClick, onClothesClick, onChemicalClick } = this.props;
+    const { program, wmData, 
+      onTipClick, 
+      onClothesClick, 
+      onChemicalClick, 
+      onHeartClick 
+    } = this.props;
     const { step } = wmData;
 
     return (
@@ -91,6 +84,11 @@ class BubbleContainer extends Component {
           onPress={onTipClick}
           icon={require('../../components/Bubble/images/bulb.png')}
           {...this._getBubblePosition(3)}     
+        />}  
+         {<IconBubble
+          onPress={onHeartClick}
+          icon={require('../../components/Bubble/images/icon_heart.png')}
+          {...this._getBubblePosition(5)}     
         />}  
         { false && <ChemicalBubble {...this._getBubblePosition(2)} />}
         { wmData.clothesWeight > 0 && program.data.key && <TextBubble icon={require('../../components/Bubble/images/icon_wm.png')} text="Start washing" {...this._getBubblePosition(4)} />}

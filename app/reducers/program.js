@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
     case CUSTOM_PROGRAM:
       return { ...state, selected: action.program.key, data: action.program, custom: true };
     case UPDATE_SCORE:
-      return { ...state, currentScore: score};
+      return { ...state, currentScore: action.score};
     default:
       return { ...state };
   }
