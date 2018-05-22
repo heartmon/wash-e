@@ -5,11 +5,13 @@ import { BackHandler } from 'react-native';
 import styles from "./styles";
 
 import MenuItem from './MenuItem';
+import CustomMenuItem from './CustomMenuItem';
+import CustomMenuItemLine from './CustomMenuItemLine';
 import MenuPager from './MenuPager';
 import { MenuButton } from '../Button';
 
 import { connect } from 'react-redux';
-import { changeMenu } from '../../actions/nav';
+import { changeMenu, changeCustomStep } from '../../actions/nav';
 import { customProgram, changeProgram, unselectedProgram } from '../../actions/program';
 import { resetStep } from '../../actions/wm_data'; 
 
@@ -122,8 +124,13 @@ class Menu extends Component {
     }
   }
 
+  handleCustomStepPress = (toStep) => {
+    this.props.dispatch(changeCustomStep(toStep));
+  }
+
   render() {
-    const { menu } = this.props.nav;
+    const { menu, customStep } = this.props.nav;
+    const { customData } = this.props.program;
 
     let menuContent = menuList[menu] && this.props.step !== WASHING_STATE.START_WASHING &&  menuList[menu].map(
       (m, index) => (
@@ -137,11 +144,19 @@ class Menu extends Component {
         />
       ));
     
-    if (menu === MENU_LEVEL.CUSTOM) {
-      menuContent = (<View>
-        <Text>Custom Menu</Text>
-      </View>)
-    }
+    if (menu === MENU_LEVEL.CUSTOM) { 
+      menuContent = ( 
+        <View style={{padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+          <CustomMenuItem customData={customData.color} onPress={() => this.handleCustomStepPress(1)} active={customStep === 1} step="1" title="Color" />
+          <CustomMenuItemLine />
+          <CustomMenuItem customData={customData.textile} onPress={() => this.handleCustomStepPress(2)} active={customStep === 2} step="2" title="Textile" />
+          <CustomMenuItemLine /> 
+          <CustomMenuItem customData={customData.stain} onPress={() => this.handleCustomStepPress(3)} active={customStep === 3} step="3" title="Stain" />
+          <CustomMenuItemLine /> 
+          <CustomMenuItem customData={customData.special} onPress={() => this.handleCustomStepPress(4)} active={customStep === 4} step="4" title="Special" />
+        </View> 
+      ) 
+    } 
 
     return (
       <View onStartShouldSetResponder={() => true}
@@ -153,7 +168,7 @@ class Menu extends Component {
           contentContainerStyle={{alignItems: 'center', justifyContent: 'center',}}
         >
           { 
-            menuList[menu] && menuContent
+            menuContent
           }
         </ScrollView>
       </View>

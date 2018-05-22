@@ -7,4 +7,10 @@ export const custom = {
     pre_wash: false,
     heavy_stain: false,
     rapid: false,
+    custom: {
+      color: [],
+      textile: [],
+      stain: null,
+      special: [],
+    },
 }
