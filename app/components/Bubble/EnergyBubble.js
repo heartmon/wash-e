@@ -18,7 +18,8 @@ const EnergyBubble = ({
   let imageSource;
   let top = 0;
   let left = 0;
-  let offset = 20;
+  // let offset = 20;
+  let offset = 0;
   let distance = styles._energyBubble.width + offset;
 
   switch (position) {

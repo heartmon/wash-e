@@ -20,11 +20,13 @@ let imageSource;
 let top = 0;
 let left = 0;
 let offset = 20;
-let distance = styles._clothesBubble.width + offset;
+// let distance = styles._clothesBubble.width + offset;
+let distance = 100; 
 
 switch (position) {
   case 'top':
-    top = -150;
+    // top = -150;
+    top = -200;
   break;
   case 'center':
     top = 0;

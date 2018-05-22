@@ -55,6 +55,7 @@ class EventBox extends Component {
   }
 
   handleToggleSick = () => {
+    const { dispatch } = this.props;
     const { sick } = this.props.wmData;
     if (sick) {
       dispatch(machineBackToNormal());

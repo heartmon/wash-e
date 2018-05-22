@@ -39,7 +39,8 @@ switch (side) {
     imageSource = require('./images/icon_bubble_left.png');
   break;
   case 'right':
-    posStyle.right = -distance;
+    top -= 50; 
+    posStyle.right = -distance - 30;
     imageSource = require('./images/icon_bubble_right.png');
   break;
 }
@@ -50,7 +51,7 @@ switch (side) {
         resizeMode="contain" 
         style={[styles.iconBubble]} 
         source={imageSource}>
-        <View style={{flex: 1, alignItems: 'center', marginTop: 12}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -24}}>
           <Image source={icon} />
         </View>
       </ImageBackground>

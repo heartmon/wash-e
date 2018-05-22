@@ -5,28 +5,40 @@ import PopupDialog from 'react-native-popup-dialog';
 
 
 import { EnergyBubble, ClothesBubble, IconBubble, ChemicalBubble, TextBubble } from './index';
-import { WASHING_STATE } from '../../config/constant';
+import { WASHING_STATE, MENU_LEVEL } from '../../config/constant';
 
 class BubbleContainer extends Component {
 
   isShowEnergy = () => {
-    return false;
+    const { program } = this.props;
+    const { selected, custom } = program;
+ 
+    return selected !== '';
   }
 
   isShowTip = () => {
+    const { nav } = this.props;
+    return nav.menu !== MENU_LEVEL.HOME;
+  } 
 
+  isShowHeart = () => {
+    const { wmData } = this.props;
+    return wmData.sick; 
   }
 
   isShowClothes = () => {
-
+    const { wmData } = this.props;
+    return !this.isShowHeart() && wmData.clothesWeight > 0;
   }
 
   isShowChemical = () => {
-
+    const { program, wmData } = this.props;
+    const { selected, custom } = program;
+    return this.isShowClothes() && this.isShowEnergy();
   }
 
   isShowStartWashing = () => {
-
+    return true;
   }
    
   _getBubblePosition = (posIndex) => { 
@@ -69,28 +81,38 @@ class BubbleContainer extends Component {
       onHeartClick 
     } = this.props;
     const { step } = wmData;
-
+ 
     return (
       step == WASHING_STATE.CONFIG && <View style={{position: 'absolute', width: '100%'}}>
-        <EnergyBubble {...this._getBubblePosition(0)} />
-        {wmData.clothesWeight > 0 && 
+        {this.isShowEnergy() && <EnergyBubble {...this._getBubblePosition(0)} />}
+        {this.isShowClothes() && 
           <ClothesBubble 
             weight={wmData.clothesWeight} 
             maxWeight={8} {...this._getBubblePosition(1)}
             onPress={onClothesClick}
           />
         }
-        {<IconBubble
+        {this.isShowTip() && <IconBubble
           onPress={onTipClick}
           icon={require('../../components/Bubble/images/bulb.png')}
           {...this._getBubblePosition(3)}     
         />}  
-         {<IconBubble
+        { 
+          this.isShowHeart() && 
+          <IconBubble
           onPress={onHeartClick}
           icon={require('../../components/Bubble/images/icon_heart.png')}
-          {...this._getBubblePosition(5)}     
-        />}  
-        { false && <ChemicalBubble {...this._getBubblePosition(2)} />}
+          {...this._getBubblePosition(1)}     
+          />
+        }  
+        { 
+          this.isShowChemical() && 
+          <IconBubble 
+            icon={require('../../components/Bubble/images/detergent.png')} 
+            onPress={onChemicalClick} 
+            {...this._getBubblePosition(2)} 
+          />
+        }
         { wmData.clothesWeight > 0 && program.data.key && <TextBubble icon={require('../../components/Bubble/images/icon_wm.png')} text="Start washing" {...this._getBubblePosition(4)} />}
       </View>
     );
@@ -98,11 +120,12 @@ class BubbleContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {wmData, program} = state;
+  const {wmData, program, nav} = state;
 
   return {
     wmData,
-    program
+    program,
+    nav
   }
 }
 

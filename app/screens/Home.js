@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, Image, ScrollView, TouchableOpacity, ViewPagerAndroid } from 'react-native';
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
@@ -12,6 +12,13 @@ import { Container } from '../components/Container';
 import { Program } from '../components/Program';
 import { EventBox } from '../components/EventBox';
 import { EnergyBubble, ClothesBubble, IconBubble, ChemicalBubble, TextBubble, BubbleContainer } from '../components/Bubble';
+
+import {
+  SickDialog,
+  ClothesDialog,
+  TipDialog,
+  ChemicalDialog,
+} from '../components/Dialog';
 
 import { MENU_LEVEL, WASHING_STATE } from '../config/constant';
 
@@ -51,7 +58,7 @@ class Home extends Component {
         <Environment style={{alignItems: 'flex-end', flexDirection: 'row'}}>
           <Program />
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}} >
-            <View style={{marginBottom: 120}} >
+            <View style={{marginBottom: 100}} >
               <Nong />
               <BubbleContainer
                 onTipClick={this.handleTipClick}
@@ -67,123 +74,11 @@ class Home extends Component {
         <TipDialog setRef={(ref) => this.tipDialog = ref} onDismiss={this.handleDialogDismiss} />
         <ClothesDialog setRef={(ref) => this.clothesDialog = ref} onDismiss={this.handleDialogDismiss} />
         <ChemicalDialog setRef={(ref) => this.chemicalDialog = ref} onDismiss={this.handleDialogDismiss} />
-        <SickDialog text="Machine drum is broken" setRef={(ref) => this.sickDialog = ref} onDismiss={this.handleDialogDismiss} />
+        <SickDialog icon={require('../components/Bubble/images/icon_heart.png')} text="Machine drum is broken" setRef={(ref) => this.sickDialog = ref} onDismiss={this.handleDialogDismiss} />
       </Container>  
     );  
   }
 }
-
-const dialogStyles = {
-  close: {
-    alignItems: 'center', width: 48, height: 48, position: 'absolute', right: 0, top: 0,
-    justifyContent: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginTop: 16,
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 35, color: '#454545',
-    marginLeft: 16,
-  },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  }
-}
-
-const TipDialog = ({setRef, onDismiss}) => (
-  <PopupDialog
-    width={0.6}
-    height={400}
-    ref={setRef}
-    dialogAnimation={scaleAnimation}
-    dialogStyle={{ borderRadius: 20 }} 
-  >
-    <View style={{borderColor: '#BDBDBD', borderStyle: 'solid', borderRadius: 20, borderWidth: 10, flex: 1, height: '100%'}}>
-      <TouchableOpacity style={dialogStyles.close} onPress={() => onDismiss('tipDialog')}>
-        <Image source={require('../components/Dialog/images/icon_close.png')} />
-      </TouchableOpacity>
-      <View style={dialogStyles.header}>  
-        <Image style={{width: 50}} resizeMode="contain" source={require('../components/Bubble/images/bulb.png')} /> 
-        <Text style={dialogStyles.title}>Get Blacker Blacks, Darker Darks</Text>
-      </View>
-      <View style={dialogStyles.content}>
-        <Image source={require('../components/Dialog/images/tip_content.png')} /> 
-      </View>
-    </View>
-  </PopupDialog>
-)
-
-const ClothesDialog = ({setRef, onDismiss}) => (
-  <PopupDialog
-    width={0.6}
-    height={400}
-    ref={setRef}
-    dialogAnimation={scaleAnimation}
-    dialogStyle={{ borderRadius: 20 }} 
-  >
-    <View style={{borderColor: '#BDBDBD', borderStyle: 'solid', borderRadius: 20, borderWidth: 10, flex: 1, height: '100%'}}>
-      <TouchableOpacity style={dialogStyles.close} onPress={() => onDismiss('tipDialog')}>
-        <Image source={require('../components/Dialog/images/icon_close.png')} />
-      </TouchableOpacity>
-      <View style={dialogStyles.header}>  
-        {/* <Image style={{width: 50}} resizeMode="contain" source={require('../components/Bubble/images/bulb.png')} />  */}
-        <Text style={dialogStyles.title}>Less clothes, same resource</Text>
-      </View>
-      <View style={dialogStyles.content}>
-        <Image source={require('../components/Dialog/images/clothes_content.png')} /> 
-      </View>
-    </View>
-  </PopupDialog>
-)
-
-const ChemicalDialog = ({setRef, onDismiss}) => (
-  <PopupDialog
-    width={0.6}
-    height={400}
-    ref={setRef}
-    dialogAnimation={scaleAnimation}
-    dialogStyle={{ borderRadius: 20 }} 
-  >
-    <View style={{borderColor: '#BDBDBD', borderStyle: 'solid', borderRadius: 20, borderWidth: 10, flex: 1, height: '100%'}}>
-      <TouchableOpacity style={dialogStyles.close} onPress={() => onDismiss('tipDialog')}>
-        <Image source={require('../components/Dialog/images/icon_close.png')} />
-      </TouchableOpacity>
-      <View style={dialogStyles.header}>  
-        <Image style={{width: 50}} resizeMode="contain" source={require('../components/Bubble/images/bulb.png')} /> 
-        <Text style={dialogStyles.title}>Chemical Measurement</Text>
-      </View>
-      <View style={dialogStyles.content}>
-        {/* <Image source={require('../components/Dialog/images/tip_content.png')} />  */}
-      </View>
-    </View>
-  </PopupDialog>
-)
-
-const SickDialog = ({setRef, text, onDismiss}) => (
-  <PopupDialog
-    width={0.6}
-    height={400}
-    ref={setRef}
-    dialogAnimation={scaleAnimation}
-    dialogStyle={{ borderRadius: 20 }} 
-  >
-    <View style={{borderColor: '#BDBDBD', borderStyle: 'solid', borderRadius: 20, borderWidth: 10, flex: 1, height: '100%'}}>
-      <TouchableOpacity style={dialogStyles.close} onPress={() => onDismiss('tipDialog')}>
-        <Image source={require('../components/Dialog/images/icon_close.png')} />
-      </TouchableOpacity>
-      <View style={dialogStyles.content}>
-        <Image />
-        <Text>{text}</Text>
-      </View>
-    </View>
-  </PopupDialog>
-)
 
 const mapStateToProps = (state) => {
   const {wmData, program} = state;
